@@ -7,20 +7,17 @@ import org.sopt.dto.response.PostResponse;
 import org.sopt.exception.CustomException;
 import org.sopt.exception.ErrorCode;
 import org.sopt.repository.PostRepository;
+import org.sopt.validator.PostValidator;
 
 import java.util.List;
 
 public class PostService {
     private final PostRepository postRepository = new PostRepository();
+    private final PostValidator postValidator = new PostValidator();
 
     // CREATE
     public CreatePostResponse createPost(CreatePostRequest request) {
-        if (request.getTitle() == null || request.getTitle().isBlank()) {
-            throw new IllegalArgumentException("제목은 필수입니다!");
-        }
-        if (request.getContent() == null || request.getContent().isBlank()) {
-            throw new IllegalArgumentException("내용은 필수입니다!");
-        }
+        postValidator.validate(request);
         String createdAt = java.time.LocalDateTime.now().toString();
         Post post = new Post(postRepository.generateId(), request.getTitle(), request.getContent(), request.getAuthor(), createdAt);
         postRepository.save(post);
