@@ -9,12 +9,16 @@ public class PostResponse {
     String author;
     String createdAt;
 
-    public PostResponse(Post post) {
+    private PostResponse(Post post) {
         this.id = post.getId();
         this.title = post.getTitle();
         this.content = post.getContent();
         this.author = post.getAuthor();
         this.createdAt = post.getCreatedAt();
+    }
+
+    public static PostResponse from(Post post) {
+        return new PostResponse(post);
     }
 
     @Override
