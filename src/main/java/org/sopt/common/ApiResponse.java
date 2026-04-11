@@ -27,7 +27,7 @@ public class ApiResponse<T> {
         return new ApiResponse<>(200, message, data);
     }
 
-    public static ApiResponse<Void> success(int status, String message) {
+    public static ApiResponse<Void> ok(int status, String message) {
         return new ApiResponse<>(status, message, null);
     }
 

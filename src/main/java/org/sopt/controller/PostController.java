@@ -42,7 +42,7 @@ public class PostController {
         // TODO: postService.updatePost() 호출, 예외 발생 시 에러 메시지 출력
         try{
             postService.updatePost(id, newTitle, newContent);
-            return ApiResponse.success(200, "게시글 수정 성공.");
+            return ApiResponse.ok(200, "게시글 수정 성공.");
         }
         catch (CustomException e){
             return ApiResponse.fail(e.getErrorCode().getStatus(), e.getErrorCode().getMessage());
@@ -54,7 +54,7 @@ public class PostController {
         // TODO: postService.deletePost() 호출, 예외 발생 시 에러 메시지 출력
         try{
             postService.deletePost(id);
-            return ApiResponse.success(200, "게시글 삭제 성공.");
+            return ApiResponse.ok(200, "게시글 삭제 성공.");
         }
         catch (CustomException e){
             return ApiResponse.fail(e.getErrorCode().getStatus(), e.getErrorCode().getMessage());
