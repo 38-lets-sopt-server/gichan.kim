@@ -1,20 +1,13 @@
 package org.sopt.dto.response;
 
-public class CreatePostResponse {
-    Long id;
-    String message;
+import org.sopt.domain.Post;
 
-    public CreatePostResponse(Long id, String message) {
-        this.id = id;
-        this.message = message;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getMessage() {
-        return message;
+public record CreatePostResponse (
+        Long id,
+        String message
+) {
+    public static CreatePostResponse from(Post post) {
+        return new CreatePostResponse(post.getId(),"게시글 등록 완료!");
     }
 }
 
