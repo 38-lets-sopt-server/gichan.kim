@@ -1,25 +1,15 @@
 package org.sopt.dto.request;
 
-public class CreatePostRequest {
-    private String title;
-    private String content;
-    private String author;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import org.sopt.enums.BoardType;
 
-    public CreatePostRequest(String title, String content, String author) {
-        this.title = title;
-        this.content = content;
-        this.author = author;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-}
+public record CreatePostRequest(
+        @NotBlank(message = "제목은 필수입니다!")
+        String title,
+        @NotBlank(message = "내용은 필수입니다!")
+        String content,
+        @NotNull
+        BoardType boardType,
+        String author
+) {}
