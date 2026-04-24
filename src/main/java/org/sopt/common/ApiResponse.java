@@ -1,7 +1,5 @@
 package org.sopt.common;
 
-import org.sopt.exception.HttpStatus;
-
 public class ApiResponse<T> {
 
     private int status;
@@ -19,7 +17,6 @@ public class ApiResponse<T> {
     public int getStatus() { return status; }
 
     public String getMessage() { return message; }
-    public void setMessage(String message) { this.message = message; }
 
     public T getData() { return data; }
 
@@ -27,8 +24,8 @@ public class ApiResponse<T> {
         return new ApiResponse<>(200, message, data);
     }
 
-    public static ApiResponse<Void> ok(int status, String message) {
-        return new ApiResponse<>(status, message, null);
+    public static ApiResponse<Void> ok(String message) {
+        return new ApiResponse<>(200, message, null);
     }
 
     public static <T> ApiResponse<T> fail(int status, String message) {
