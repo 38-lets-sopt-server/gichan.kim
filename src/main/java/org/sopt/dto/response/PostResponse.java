@@ -1,28 +1,20 @@
 package org.sopt.dto.response;
 
 import org.sopt.domain.Post;
+import org.sopt.enums.BoardType;
 
-public class PostResponse {
-    Long id;
-    String title;
-    String content;
-    String author;
-    String createdAt;
+import java.time.LocalDateTime;
 
-    private PostResponse(Post post) {
-        this.id = post.getId();
-        this.title = post.getTitle();
-        this.content = post.getContent();
-        this.author = post.getAuthor();
-        this.createdAt = post.getCreatedAt();
-    }
+public record PostResponse(Long id, String title, String content, String author, BoardType boardType, LocalDateTime createdAt) {
 
     public static PostResponse from(Post post) {
-        return new PostResponse(post);
-    }
-
-    @Override
-    public String toString() {
-        return "[" + id + "] " + title + " - " + author + " (" + createdAt + ")\n" + content;
+        return new PostResponse(
+                post.getId(),
+                post.getTitle(),
+                post.getContent(),
+                post.getAuthor(),
+                post.getBoardType(),
+                post.getCreatedAt()
+        );
     }
 }
