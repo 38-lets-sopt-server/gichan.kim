@@ -1,32 +1,53 @@
 package org.sopt.service;
 
 import org.sopt.domain.Post;
-import org.sopt.dto.request.CreatePostRequest;
-import org.sopt.dto.response.CreatePostResponse;
-import org.sopt.dto.response.PostResponse;
+import org.sopt.dto.request.*;
+import org.sopt.dto.response.*;
+import org.sopt.enums.BoardType;
 import org.sopt.exception.CustomException;
 import org.sopt.exception.ErrorCode;
 import org.sopt.repository.PostRepository;
-import org.sopt.validator.PostValidator;
-
+import org.springframework.stereotype.Service;
 import java.util.List;
 
+@Service
 public class PostService {
-    private final PostRepository postRepository = new PostRepository();
-    private final PostValidator postValidator = new PostValidator();
+    private final PostRepository postRepository;
+
+    public PostService(PostRepository postRepository) {
+        this.postRepository = postRepository;
+    }
 
     // CREATE
     public CreatePostResponse createPost(CreatePostRequest request) {
-        postValidator.validate(request);
-        String createdAt = java.time.LocalDateTime.now().toString();
-        Post post = new Post(postRepository.generateId(), request.getTitle(), request.getContent(), request.getAuthor(), createdAt);
+        Post post = Post.createPost(postRepository.generateId(), request);
         postRepository.save(post);
-        return new CreatePostResponse(post.getId(), "게시글 등록 완료!");
+        return CreatePostResponse.from(post);
     }
 
     // READ - 전체 📝 과제
-    public List<PostResponse> getAllPosts() {
-        return postRepository.findAll()
+    public List<PostResponse> getAllPosts(String strType, int page, int size) {
+        BoardType type;
+
+        try {
+            // ALL인 경우 type null값
+            type = "ALL".equals(strType) ? null : BoardType.valueOf(strType.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new CustomException(ErrorCode.INVALID_BOARD_TYPE_VALUE);
+        }
+
+        List<Post> filteredPosts = postRepository.findAll()
+                .stream()
+                .filter(post -> type == null || post.getBoardType() == type)
+                .toList();
+
+        int start = page * size;
+        int end = Math.min((start + size), filteredPosts.size());
+
+        if (start >= filteredPosts.size() || start < 0)
+            return List.of();
+
+        return filteredPosts.subList(start, end)
                 .stream()
                 .map(PostResponse::from)
                 .toList();
@@ -34,24 +55,18 @@ public class PostService {
 
     // READ - 단건 📝 과제
     public PostResponse getPost(Long id) {
-        Post post = postRepository.findById(id);
-
-        if (post == null)
-            throw new CustomException(ErrorCode.POST_NOT_FOUND);
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_FOUND));
 
         return PostResponse.from(post);
     }
 
     // UPDATE 📝 과제
-    public void updatePost(Long id, String newTitle, String newContent) {
-        Post post =  postRepository.findById(id);
+    public void updatePost(Long id, UpdatePostRequest request) {
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_FOUND));
 
-        if (post == null)
-            throw new CustomException(ErrorCode.POST_NOT_FOUND);
-
-        post.update(newTitle, newContent);
-        postRepository.deleteById(id);  // 기존 post는 삭제 처리
-        postRepository.save(post);
+        post.update(request.title(), request.newContent());
     }
 
     // DELETE 📝 과제
