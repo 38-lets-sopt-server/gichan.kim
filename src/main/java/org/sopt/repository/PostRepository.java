@@ -1,14 +1,9 @@
 package org.sopt.repository;
 
 import org.sopt.domain.Post;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.Optional;
-
-public interface PostRepository {
-    public Post save(Post post);
-    public List<Post> findAll();
-    public Optional<Post> findById(Long id);
-    public boolean deleteById(Long id);
-    public Long generateId();
+@Repository
+public interface PostRepository extends JpaRepository<Post, Long> {
 }
