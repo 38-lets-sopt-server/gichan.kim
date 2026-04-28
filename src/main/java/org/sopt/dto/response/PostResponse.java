@@ -5,14 +5,13 @@ import org.sopt.enums.BoardType;
 
 import java.time.LocalDateTime;
 
-public record PostResponse(Long id, String title, String content, String author, BoardType boardType, LocalDateTime createdAt) {
+public record PostResponse(Long id, String title, String content, BoardType boardType, LocalDateTime createdAt) {
 
     public static PostResponse from(Post post) {
         return new PostResponse(
                 post.getId(),
                 post.getTitle(),
                 post.getContent(),
-                post.getAuthor(),
                 post.getBoardType(),
                 post.getCreatedAt()
         );

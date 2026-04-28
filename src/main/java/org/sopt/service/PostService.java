@@ -1,31 +1,42 @@
 package org.sopt.service;
 
 import org.sopt.domain.Post;
+import org.sopt.domain.User;
 import org.sopt.dto.request.*;
 import org.sopt.dto.response.*;
 import org.sopt.enums.BoardType;
 import org.sopt.exception.CustomException;
 import org.sopt.exception.ErrorCode;
 import org.sopt.repository.PostRepository;
+import org.sopt.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 @Service
 public class PostService {
     private final PostRepository postRepository;
+    private final UserRepository userRepository;
 
-    public PostService(PostRepository postRepository) {
+    public PostService(PostRepository postRepository, UserRepository userRepository) {
         this.postRepository = postRepository;
+        this.userRepository = userRepository;
     }
 
     // CREATE
+    @Transactional
     public CreatePostResponse createPost(CreatePostRequest request) {
-        Post post = Post.createPost(postRepository.generateId(), request);
+        User user = userRepository.findById(request.userId())
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        Post post = Post.createPost(request.title(), request.content(), request.boardType(), user);
         postRepository.save(post);
         return CreatePostResponse.from(post);
     }
 
     // READ - 전체 📝 과제
+    @Transactional(readOnly = true)
     public List<PostResponse> getAllPosts(String strType, int page, int size) {
         BoardType type;
 
@@ -54,6 +65,7 @@ public class PostService {
     }
 
     // READ - 단건 📝 과제
+    @Transactional(readOnly = true)
     public PostResponse getPost(Long id) {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_FOUND));
@@ -62,16 +74,21 @@ public class PostService {
     }
 
     // UPDATE 📝 과제
-    public void updatePost(Long id, UpdatePostRequest request) {
+    @Transactional
+    public PostResponse  updatePost(Long id, UpdatePostRequest request) {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_FOUND));
 
-        post.update(request.title(), request.newContent());
+        post.update(request.newTitle(), request.newContent());
+
+        return PostResponse.from(post);
     }
 
     // DELETE 📝 과제
     public void deletePost(Long id) {
-        if (!postRepository.deleteById(id))
-            throw new CustomException(ErrorCode.POST_NOT_FOUND);
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_FOUND));
+
+        postRepository.deleteById(id);
     }
 }

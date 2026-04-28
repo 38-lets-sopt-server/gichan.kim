@@ -60,14 +60,14 @@ public class PostController {
 
     // PUT /posts/{id} 📝 과제
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<Void>> updatePost(
+    public ResponseEntity<ApiResponse<PostResponse>> updatePost(
             @PathVariable Long id,
             @RequestBody UpdatePostRequest request
     ) {
-        postService.updatePost(id, request);
+        PostResponse response = postService.updatePost(id, request);
 
         return ResponseEntity
-                .ok(ApiResponse.ok("게시글 수정 성공."));
+                .ok(ApiResponse.ok(response, "게시글 수정 성공."));
     }
 
     // DELETE /posts/{id} 📝 과제
