@@ -1,6 +1,7 @@
-package org.sopt.exception;
+package org.sopt.common.exception;
 
-import org.sopt.common.ApiResponse;
+import org.sopt.common.response.ApiResponse;
+import org.sopt.common.response.ErrorCode;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
