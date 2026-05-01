@@ -1,8 +1,10 @@
 package org.sopt.user.domain;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.SoftDelete;
 import org.sopt.common.entity.BaseTimeEntity;
 
+@SoftDelete(columnName = "deleted_at")
 @Entity
 @Table(name = "users")  // "user"는 SQL 예약어라 테이블명을 변경해요
 public class User extends BaseTimeEntity {
