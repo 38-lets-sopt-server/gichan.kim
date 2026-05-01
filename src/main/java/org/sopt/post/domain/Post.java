@@ -1,11 +1,13 @@
 package org.sopt.post.domain;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.SoftDelete;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 import org.sopt.common.entity.BaseTimeEntity;
 import org.sopt.user.domain.User;
 
-@SoftDelete(columnName = "deleted_at")
+@SQLDelete(sql = "UPDATE posts SET deleted = true WHERE id = ?")
+@SQLRestriction("deleted = false")
 @Entity
 @Table(name = "posts")
 public class Post extends BaseTimeEntity{
@@ -25,6 +27,8 @@ public class Post extends BaseTimeEntity{
 
     @Version
     private Long version;
+
+    private boolean deleted = false;
 
     protected Post() {}
 
@@ -55,4 +59,5 @@ public class Post extends BaseTimeEntity{
         return this.boardType;
     }
     public User getUser() { return this.user; }
+    public boolean isDeleted() { return deleted; }
 }

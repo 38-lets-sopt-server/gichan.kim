@@ -1,10 +1,13 @@
 package org.sopt.user.domain;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 import org.hibernate.annotations.SoftDelete;
 import org.sopt.common.entity.BaseTimeEntity;
 
-@SoftDelete(columnName = "deleted_at")
+@SQLDelete(sql = "UPDATE users SET deleted = true WHERE id = ?")
+@SQLRestriction("deleted = false")
 @Entity
 @Table(name = "users")  // "user"는 SQL 예약어라 테이블명을 변경해요
 public class User extends BaseTimeEntity {
@@ -16,6 +19,8 @@ public class User extends BaseTimeEntity {
     private String nickname;
 
     private String email;
+
+    private boolean deleted = false;
 
     protected User() {}
 
