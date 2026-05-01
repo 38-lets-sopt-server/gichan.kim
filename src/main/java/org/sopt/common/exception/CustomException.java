@@ -1,16 +1,14 @@
 package org.sopt.common.exception;
 
-import org.sopt.common.response.ErrorCode;
-
 public class CustomException extends RuntimeException {
-    private final ErrorCode errorCode;
+    private final ResponseCode errorCode;
 
-    public CustomException(ErrorCode errorCode) {
+    public CustomException(ResponseCode errorCode) {
         super(errorCode.getMessage());
         this.errorCode = errorCode;
     }
 
-    public ErrorCode getErrorCode() {
+    public ResponseCode getErrorCode() {
         return errorCode;
     }
 }
