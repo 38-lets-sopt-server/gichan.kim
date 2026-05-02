@@ -1,7 +1,5 @@
 package org.sopt.like.service;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.LockModeType;
 import org.sopt.common.exception.CustomException;
 import org.sopt.like.doamin.Like;
 import org.sopt.like.exception.LikeErrorCode;
@@ -21,13 +19,11 @@ public class LikeTransactionService {
     private final PostRepository postRepository;
     private final LikeRepository likeRepository;
     private final UserRepository userRepository;
-    private final EntityManager entityManager;
 
-    public LikeTransactionService(PostRepository postRepository, LikeRepository likeRepository, UserRepository userRepository, EntityManager entityManager) {
+    public LikeTransactionService(PostRepository postRepository, LikeRepository likeRepository, UserRepository userRepository) {
         this.postRepository = postRepository;
         this.likeRepository = likeRepository;
         this.userRepository = userRepository;
-        this.entityManager = entityManager;
     }
 
     @Transactional
@@ -43,8 +39,8 @@ public class LikeTransactionService {
 
         try {
             likeRepository.save(Like.create(post, user));
-            // Post의 version을 강제로 증가시켜 낙관적 락 검증 유발
-            entityManager.lock(post, LockModeType.OPTIMISTIC_FORCE_INCREMENT);
+            // likeCount 변경으로 dirty checking 발생 → @Version 기반 낙관적 락 검증 유발
+            post.addLike();
         } catch (DataIntegrityViolationException e) {
             throw new CustomException(LikeErrorCode.ALREADY_LIKED);
         }
@@ -59,6 +55,6 @@ public class LikeTransactionService {
                 .orElseThrow(() -> new CustomException(LikeErrorCode.LIKE_NOT_FOUND));
 
         likeRepository.delete(like);
-        entityManager.lock(post, LockModeType.OPTIMISTIC_FORCE_INCREMENT);
+        post.cancelLike();
     }
 }
