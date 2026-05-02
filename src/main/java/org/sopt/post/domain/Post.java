@@ -25,6 +25,8 @@ public class Post extends BaseTimeEntity{
 
     BoardType boardType;    // 게시글 타입
 
+    private long likeCount = 0L;
+
     @Version
     private Long version;
 
@@ -52,6 +54,16 @@ public class Post extends BaseTimeEntity{
         this.boardType = BoardType.HOT;
     }
 
+    public void addLike() {
+        this.likeCount++;
+    }
+
+    public void cancelLike() {
+        if (this.likeCount > 0) {
+            this.likeCount--;
+        }
+    }
+
     public Long getId() { return this.id; }
     public String getTitle() { return this.title; }
     public String getContent() { return this.content; }
@@ -59,5 +71,6 @@ public class Post extends BaseTimeEntity{
         return this.boardType;
     }
     public User getUser() { return this.user; }
+    public long getLikeCount() { return this.likeCount; }
     public boolean isDeleted() { return deleted; }
 }
