@@ -1,7 +1,7 @@
 package org.sopt.like.service;
 
 import org.sopt.common.exception.CustomException;
-import org.sopt.like.doamin.Like;
+import org.sopt.like.domain.Like;
 import org.sopt.like.exception.LikeErrorCode;
 import org.sopt.like.repository.LikeRepository;
 import org.sopt.post.domain.Post;
