@@ -1,5 +1,6 @@
 package org.sopt.post.service;
 
+import org.sopt.like.repository.LikeRepository;
 import org.sopt.post.domain.Post;
 import org.sopt.post.exception.PostErrorCode;
 import org.sopt.user.domain.User;
@@ -20,10 +21,12 @@ import java.util.List;
 public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final LikeRepository likeRepository;
 
-    public PostService(PostRepository postRepository, UserRepository userRepository) {
+    public PostService(PostRepository postRepository, UserRepository userRepository, LikeRepository likeRepository) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
+        this.likeRepository = likeRepository;
     }
 
     // 게시글 생성
@@ -85,6 +88,9 @@ public class PostService {
 
         if (!post.getUser().getId().equals(request.userId()))
             throw new CustomException(PostErrorCode.NOT_POST_OWNER);
+
+        // 게시글 삭제 시 관련 좋아요도 삭제
+        likeRepository.deleteAllByPostId(id);
 
         postRepository.delete(post);
     }
