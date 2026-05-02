@@ -19,7 +19,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             p.title,
             p.content,
             p.boardType,
-            CAST((SELECT COUNT(l) FROM PostLike l WHERE l.post = p) AS long),
+            p.likeCount,
             p.createdAt
         )
         FROM Post p
