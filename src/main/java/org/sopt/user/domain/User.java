@@ -1,11 +1,12 @@
 package org.sopt.user.domain;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
-import org.hibernate.annotations.SoftDelete;
 import org.sopt.common.entity.BaseTimeEntity;
 
+@Getter
 @SQLDelete(sql = "UPDATE users SET deleted = true WHERE id = ?")
 @SQLRestriction("deleted = false")
 @Entity
@@ -20,6 +21,8 @@ public class User extends BaseTimeEntity {
 
     private String email;
 
+    private String password;
+
     private boolean deleted = false;
 
     protected User() {}
@@ -27,17 +30,5 @@ public class User extends BaseTimeEntity {
     public User(String nickname, String email) {
         this.nickname = nickname;
         this.email = email;
-    }
-
-    public Long getId() {
-        return this.id;
-    }
-
-    public String getNickname() {
-        return this.nickname;
-    }
-
-    public String getEmail() {
-        return this.email;
     }
 }
