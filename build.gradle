@@ -31,6 +31,13 @@ dependencies {
     // Version
     implementation 'org.springframework.retry:spring-retry'
     implementation 'org.springframework:spring-aspects'
+    // JWT
+    implementation 'com.auth0:java-jwt:4.4.0'
+    // Lombok
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    // Spring Security
+    implementation 'org.springframework.boot:spring-boot-starter-security'
 }
 
 test {
