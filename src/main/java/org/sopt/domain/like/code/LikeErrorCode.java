@@ -1,4 +1,4 @@
-package org.sopt.domain.like.exception;
+package org.sopt.domain.like.code;
 
 import org.sopt.global.common.code.BaseCode;
 import org.springframework.http.HttpStatus;

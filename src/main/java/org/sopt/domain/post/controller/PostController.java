@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import org.sopt.global.common.code.SuccessCode;
+import org.sopt.domain.post.code.PostSuccessCode;
 import org.sopt.global.common.response.SuccessResponse;
 import org.sopt.domain.post.dto.request.CreatePostRequest;
 import org.sopt.domain.post.dto.request.DeletePostRequest;
@@ -49,8 +49,8 @@ public class PostController {
         CreatePostResponse response = postService.createPost(request);
 
         return ResponseEntity
-                .status(SuccessCode.POST_CREATED.getStatus())
-                .body(SuccessResponse.of(SuccessCode.POST_CREATED, response));
+                .status(PostSuccessCode.POST_CREATED.getStatus())
+                .body(SuccessResponse.of(PostSuccessCode.POST_CREATED, response));
     }
 
     @Operation(
@@ -76,7 +76,7 @@ public class PostController {
         List<PostListResponse> responses = postService.getAllPosts(keyword, type, pageable);
 
         return ResponseEntity
-                .ok(SuccessResponse.of(SuccessCode.POST_LIST_FOUND, responses));
+                .ok(SuccessResponse.of(PostSuccessCode.POST_LIST_FOUND, responses));
     }
 
     @Operation(
@@ -95,7 +95,7 @@ public class PostController {
         PostResponse response = postService.getPost(id);
 
         return ResponseEntity
-                .ok(SuccessResponse.of(SuccessCode.POST_FOUND, response));
+                .ok(SuccessResponse.of(PostSuccessCode.POST_FOUND, response));
     }
 
     @Operation(
@@ -116,7 +116,7 @@ public class PostController {
         PostResponse response = postService.updatePost(id, request);
 
         return ResponseEntity
-                .ok(SuccessResponse.of(SuccessCode.POST_UPDATED, response));
+                .ok(SuccessResponse.of(PostSuccessCode.POST_UPDATED, response));
     }
 
     @Operation(
@@ -135,6 +135,6 @@ public class PostController {
     ) {
         postService.deletePost(id, request);
         return ResponseEntity
-                .ok(SuccessResponse.of(SuccessCode.POST_DELETED));
+                .ok(SuccessResponse.of(PostSuccessCode.POST_DELETED));
     }
 }

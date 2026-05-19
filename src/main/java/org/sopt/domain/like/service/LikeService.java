@@ -1,7 +1,7 @@
 package org.sopt.domain.like.service;
 
 import org.sopt.global.exception.CustomException;
-import org.sopt.domain.like.exception.LikeErrorCode;
+import org.sopt.domain.like.code.LikeErrorCode;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Recover;

@@ -8,7 +8,7 @@ import org.sopt.domain.post.dto.request.UpdatePostRequest;
 import org.sopt.domain.post.dto.response.CreatePostResponse;
 import org.sopt.domain.post.dto.response.PostListResponse;
 import org.sopt.domain.post.dto.response.PostResponse;
-import org.sopt.domain.post.exception.PostErrorCode;
+import org.sopt.domain.post.code.PostErrorCode;
 import org.sopt.domain.user.entity.User;
 import org.sopt.domain.post.entity.BoardType;
 import org.sopt.global.exception.CustomException;

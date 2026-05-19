@@ -1,7 +1,7 @@
 package org.sopt.global.common.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import org.sopt.global.common.code.SuccessCode;
+import org.sopt.global.common.code.BaseCode;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record SuccessResponse<T>(
@@ -10,11 +10,11 @@ public record SuccessResponse<T>(
         String message,
         T data
 ) implements BaseResponse {
-    public static SuccessResponse<Void> of(SuccessCode successCode) {
+    public static SuccessResponse<Void> of(BaseCode successCode) {
         return of(successCode, null);
     }
 
-    public static <T> SuccessResponse<T> of(SuccessCode successCode, T data) {
+    public static <T> SuccessResponse<T> of(BaseCode successCode, T data) {
         return new SuccessResponse<T>(
                 true,
                 successCode.getCode(),

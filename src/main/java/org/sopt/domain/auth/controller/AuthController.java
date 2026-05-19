@@ -2,9 +2,9 @@ package org.sopt.domain.auth.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.sopt.domain.auth.code.AuthSuccessCode;
 import org.sopt.domain.auth.dto.response.TokenResponse;
 import org.sopt.domain.auth.service.AuthService;
-import org.sopt.global.common.code.SuccessCode;
 import org.sopt.global.common.response.SuccessResponse;
 import org.sopt.domain.user.dto.response.UserResponse;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +26,7 @@ public class AuthController {
     ) {
         TokenResponse tokens = authService.login(email, password);
 
-        return ResponseEntity.ok(SuccessResponse.of(SuccessCode.TOKEN_ISSUE_SUCCESS, tokens));
+        return ResponseEntity.ok(SuccessResponse.of(AuthSuccessCode.TOKEN_ISSUE_SUCCESS, tokens));
     }
 
     @Operation(summary = "내 정보 조회 (Access Token 검증)")
@@ -40,6 +40,6 @@ public class AuthController {
         Long userId = Long.parseLong(authentication.getName());
         UserResponse user = authService.getUserById(userId);
 
-        return ResponseEntity.ok(SuccessResponse.of(SuccessCode.GET_MY_INFO_SUCCESS, user));
+        return ResponseEntity.ok(SuccessResponse.of(AuthSuccessCode.GET_MY_INFO_SUCCESS, user));
     }
 }

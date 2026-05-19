@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import org.sopt.global.common.code.SuccessCode;
+import org.sopt.domain.like.code.LikeSuccessCode;
 import org.sopt.global.common.response.SuccessResponse;
 import org.sopt.domain.like.dto.request.AddLikeRequest;
 import org.sopt.domain.like.dto.request.CancelLikeRequest;
@@ -50,8 +50,8 @@ public class LikeController {
         likeService.addLike(postId, request.userId());
 
         return ResponseEntity
-                .status(SuccessCode.LIKE_CREATED.getStatus())
-                .body(SuccessResponse.of(SuccessCode.LIKE_CREATED));
+                .status(LikeSuccessCode.LIKE_CREATED.getStatus())
+                .body(SuccessResponse.of(LikeSuccessCode.LIKE_CREATED));
     }
 
     @Operation(
@@ -81,7 +81,7 @@ public class LikeController {
         likeService.cancelLike(postId, request.userId());
 
         return ResponseEntity
-                .status(SuccessCode.LIKE_DELETED.getStatus())
-                .body(SuccessResponse.of(SuccessCode.LIKE_DELETED));
+                .status(LikeSuccessCode.LIKE_DELETED.getStatus())
+                .body(SuccessResponse.of(LikeSuccessCode.LIKE_DELETED));
     }
 }

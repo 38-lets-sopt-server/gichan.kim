@@ -2,10 +2,10 @@ package org.sopt.domain.like.service;
 
 import org.sopt.global.exception.CustomException;
 import org.sopt.domain.like.entity.Like;
-import org.sopt.domain.like.exception.LikeErrorCode;
+import org.sopt.domain.like.code.LikeErrorCode;
 import org.sopt.domain.like.repository.LikeRepository;
 import org.sopt.domain.post.entity.Post;
-import org.sopt.domain.post.exception.PostErrorCode;
+import org.sopt.domain.post.code.PostErrorCode;
 import org.sopt.domain.post.repository.PostRepository;
 import org.sopt.domain.user.entity.User;
 import org.sopt.domain.user.exception.UserErrorCode;
