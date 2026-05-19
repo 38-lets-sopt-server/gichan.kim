@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
     @Query("""
-        SELECT new org.sopt.post.dto.response.PostListResponse(
+        SELECT new org.sopt.domain.post.dto.response.PostListResponse(
             p.id,
             u.nickname,
             p.title,

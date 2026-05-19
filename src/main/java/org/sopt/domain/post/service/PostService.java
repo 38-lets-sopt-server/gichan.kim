@@ -10,8 +10,6 @@ import org.sopt.domain.post.dto.response.PostListResponse;
 import org.sopt.domain.post.dto.response.PostResponse;
 import org.sopt.domain.post.exception.PostErrorCode;
 import org.sopt.domain.user.entity.User;
-import org.sopt.post.dto.request.*;
-import org.sopt.post.dto.response.*;
 import org.sopt.domain.post.entity.BoardType;
 import org.sopt.global.exception.CustomException;
 import org.sopt.domain.post.repository.PostRepository;
