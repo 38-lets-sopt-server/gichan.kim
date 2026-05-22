@@ -1,11 +1,12 @@
 package org.sopt.domain.user.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
+import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 import org.sopt.global.common.entity.BaseTimeEntity;
 
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @SQLDelete(sql = "UPDATE users SET deleted = true WHERE id = ?")
 @SQLRestriction("deleted = false")
@@ -19,16 +20,45 @@ public class User extends BaseTimeEntity {
 
     private String nickname;
 
+    @Column(unique = true)
     private String email;
 
     private String password;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private AuthProvider provider;
+
+    @Column(unique = true)
+    private String providerId;
+
     private boolean deleted = false;
 
-    protected User() {}
-
-    public User(String nickname, String email) {
+    private User(String nickname, String email, String password, AuthProvider provider, String providerId) {
         this.nickname = nickname;
         this.email = email;
+        this.password = password;
+        this.provider = provider;
+        this.providerId = providerId;
+    }
+
+    public static User createKakaoUser(String providerId, String email, String nickname) {
+        return new User(
+                nickname,
+                email,
+                null,
+                AuthProvider.KAKAO,
+                providerId
+        );
+    }
+
+    public static User createLocalUser(String email, String encodedPassword, String nickname) {
+        return new User(
+                nickname,
+                email,
+                encodedPassword,
+                AuthProvider.LOCAL,
+                null
+        );
     }
 }
