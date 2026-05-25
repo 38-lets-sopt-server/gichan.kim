@@ -17,12 +17,15 @@ import org.sopt.domain.auth.dto.response.TokenResponse;
 import org.sopt.domain.user.entity.User;
 import org.sopt.domain.user.dto.response.UserResponse;
 import org.sopt.domain.user.repository.UserRepository;
+import org.sopt.global.jwt.service.TokenBlacklistService;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +36,8 @@ public class AuthService {
     private final JwtProvider jwtProvider;
     private final KakaoOAuthClient kakaoOAuthClient;
     private final PasswordEncoder passwordEncoder;
+    private final TokenBlacklistService tokenBlacklistService;
+    private final RedisTemplate<String, String> redisTemplate;
 
     @Value("${security.jwt.refresh-token-expires-in-seconds:1209600}")
     private long refreshTokenExpiresInSeconds;
@@ -69,6 +74,8 @@ public class AuthService {
         }
 
         TokenResponse tokens = issueTokens(user);
+
+        redisTemplate.opsForValue().set("TEST_KEY", "HELLO", 60, TimeUnit.SECONDS);
 
         return new LoginResult(
                 tokens.accessToken(),
@@ -146,8 +153,14 @@ public class AuthService {
 
 
     @Transactional
-    public void logout(String refreshTokenValue) {
+    public void logout(String accessTokenValue, String refreshTokenValue) {
         refreshTokenRepository.findByToken(refreshTokenValue)
                 .ifPresent(refreshTokenRepository::delete);
+
+        long remaining = jwtProvider.getRemainingExpiration(accessTokenValue);
+
+        if (remaining > 0) {
+            tokenBlacklistService.addToBlacklist(accessTokenValue, remaining);
+        }
     }
 }
