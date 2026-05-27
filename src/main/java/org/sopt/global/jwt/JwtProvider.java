@@ -72,4 +72,24 @@ public class JwtProvider {
             throw new CustomException(AuthErrorCode.INVALID_ACCESS_TOKEN_SUBJECT);
         }
     }
+
+    public long getRemainingExpiration(String token) {
+        try {
+            Claims claims = Jwts.parser()
+                    .verifyWith(key)
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
+
+            Date expiration = claims.getExpiration();
+            long now = System.currentTimeMillis();
+
+            return expiration.getTime() - now;
+
+        } catch (ExpiredJwtException e) {
+            return 0;
+        } catch (JwtException e) {
+            throw new CustomException(AuthErrorCode.INVALID_ACCESS_TOKEN);
+        }
+    }
 }

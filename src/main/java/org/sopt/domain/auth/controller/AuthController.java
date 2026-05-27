@@ -16,6 +16,7 @@ import org.sopt.global.jwt.CookieUtil;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -72,7 +73,7 @@ public class AuthController {
     )
     @PostMapping("/reissue")
     public ResponseEntity<SuccessResponse<Void>> reissue(
-            @CookieValue(name = "refreshToken") String refreshToken
+            @CookieValue(name = "refreshToken", required = false) String refreshToken
     ) {
         TokenResponse tokens = authService.reissue(refreshToken);
 
@@ -90,12 +91,19 @@ public class AuthController {
     )
     @PostMapping("/logout")
     public ResponseEntity<SuccessResponse<Void>> logout(
-            @CookieValue(name = "refreshToken") String refreshToken
+            @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authHeader,
+            @CookieValue(name = "refreshToken", required = false) String refreshToken
     ) {
-        authService.logout(refreshToken);
+        String accessToken = extractToken(authHeader);
+        authService.logout(accessToken, refreshToken);
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, CookieUtil.deleteRefreshToken().toString())
                 .body(SuccessResponse.of(AuthSuccessCode.LOGOUT_SUCCESS));
+    }
+
+    public String extractToken(String bearer) {
+        if (bearer == null || !bearer.startsWith("Bearer ")) return null;
+        return bearer.substring(7);
     }
 }
